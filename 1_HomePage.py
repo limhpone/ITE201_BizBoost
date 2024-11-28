@@ -88,7 +88,7 @@ with st.container():
         st.image(
                     "./images/logo.png",  # Replace with the URL or file path of your image
                     caption="Empowering Fitness with Technology",
-                    width=450
+                    width=300
                     # Add a smaller image to the right column
     
         )
