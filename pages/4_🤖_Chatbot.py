@@ -36,7 +36,8 @@ chat_session = model.start_chat(
 st.set_page_config(page_title="BizBoost Fitness & Wellness Chatbot", layout="wide")
 st.title("BizBoost Fitness & Wellness Chatbot")
 
-st.sidebar.image("images/logo.png", use_column_width=True) 
+st.sidebar.image("images/logo.png", use_container_width=True)
+
 
 # Initialize chat messages in session state
 if "messages" not in st.session_state:
