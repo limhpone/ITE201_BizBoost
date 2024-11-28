@@ -33,7 +33,7 @@ import requests
 
 
 # Find more emojis here: https://www.webfx.com/tools/emoji-cheat-sheet/
-st.set_page_config(page_title="BizBoost Fitness Trainer", layout="wide")
+#st.set_page_config(page_title="BizBoost Fitness Trainer", layout="wide")
 
 def load_lottieurl(url):
     r = requests.get(url)
