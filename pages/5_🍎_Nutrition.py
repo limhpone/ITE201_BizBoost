@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import plotly.graph_objects as go
-# from pydataset import data
+from pydataset import data
 from streamlit_extras.no_default_selectbox import selectbox
 import matplotlib.pyplot as plt
 
@@ -43,4 +43,4 @@ try:
 
     
 except:
-    st.write("")
+    st.write("")st.write("")
