@@ -1,6 +1,11 @@
 numpy
 opencv-python-headless
 mediapipe
-streamlit
+streamlit_lottie
 streamlit_webrtc
-st
+streamlit
+google-generativeai
+requests
+plotly
+pydataset
+streamlit-extras
