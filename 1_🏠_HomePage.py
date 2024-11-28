@@ -27,9 +27,9 @@
 # with col2:
 #    st_lottie(lottie_hello,key="hello1", height=500, width=400)
 import requests
-import streamlit as st
-from streamlit_lottie import st_lottie
-from PIL import Image
+#import streamlit as st
+#from streamlit_lottie import st_lottie
+#from PIL import Image
 
 
 # Find more emojis here: https://www.webfx.com/tools/emoji-cheat-sheet/
@@ -135,8 +135,8 @@ with st.container():
     st.write("##")
     image_column, text_column = st.columns((1, 2))
     with image_column:
-        #st.image(img_lottie_animation)
-        st_lottie(music, height=300, key="music")
+        st.image(img_lottie_animation)
+        #st_lottie(music, height=300, key="music")
     with text_column:
         st.write("##")
         st.subheader("Workout music")
@@ -149,8 +149,8 @@ with st.container():
 with st.container():
     image_column, text_column = st.columns((1, 2))
     with image_column:
-        #st.image(img_contact_form)
-        st_lottie(podcast, height=300, key="podcast")
+        st.image(img_contact_form)
+        #st_lottie(podcast, height=300, key="podcast")
     with text_column:
         st.write("##")
         st.subheader("Podcast")
