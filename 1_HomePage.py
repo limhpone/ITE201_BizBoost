@@ -1,39 +1,11 @@
-# # Main file for the project
-# import streamlit as st
-# import requests
-# from streamlit_lottie import st_lottie
-
-# html = """
-#     <div style="background-color:#025246 ;padding:10px">
-#     <h2 style="color:white;text-align:center;">AI Fitness Trainer</h2>
-#     </div>"""
-# st.markdown(html, unsafe_allow_html=True)
-
-# col1, col2 = st.columns([10,8], gap="large")
-
-# with col1:
-#     st.write("## Trainer")
-
-
-# frame_placeholder = st.empty()
-# def load_lottieurl(url: str):
-#     r = requests.get(url)
-#     if r.status_code != 200:
-#         return None
-#     return r.json()
-
-# lottie_hello = load_lottieurl("https://assets10.lottiefiles.com/packages/lf20_FYx0Ph.json")
-
-# with col2:
-#    st_lottie(lottie_hello,key="hello1", height=500, width=400)
 import requests
-#import streamlit as st
-#from streamlit_lottie import st_lottie
-#from PIL import Image
+import streamlit as st
+from streamlit_lottie import st_lottie
+from PIL import Image
 
 
 # Find more emojis here: https://www.webfx.com/tools/emoji-cheat-sheet/
-#st.set_page_config(page_title="BizBoost Fitness Trainer", layout="wide")
+st.set_page_config(page_title="BizBoost Fitness Trainer", layout="wide")
 
 def load_lottieurl(url):
     r = requests.get(url)
@@ -42,13 +14,35 @@ def load_lottieurl(url):
     return r.json()
 
 
-# Use local CSS
-def local_css(file_name):
-    with open(file_name) as f:
-        st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
-
-
-local_css("./styles/styles.css")
+custom_css = """
+<style>
+input, textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    margin-top: 6px;
+    margin-bottom: 16px;
+    resize: vertical;
+}
+button {
+    background-color: #04AA6D;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+button:hover {
+    background-color: #1c42ca;
+}
+#MainMenu {visibility: hidden;}
+footer {visibility: hidden;}
+header {visibility: hidden;}
+</style>
+"""
+st.markdown(custom_css, unsafe_allow_html=True)
 
 # ---- LOAD ASSETS ----
 lottie_coding = load_lottieurl("https://assets10.lottiefiles.com/packages/lf20_FYx0Ph.json")
@@ -92,7 +86,7 @@ with st.container():
         )
     with right_column:
         st.image(
-                    "images/logo.png",  # Replace with the URL or file path of your image
+                    "./images/logo.png",  # Replace with the URL or file path of your image
                     caption="Empowering Fitness with Technology",
                     width=450
                     # Add a smaller image to the right column
@@ -135,8 +129,8 @@ with st.container():
     st.write("##")
     image_column, text_column = st.columns((1, 2))
     with image_column:
-        st.image(img_lottie_animation)
-        #st_lottie(music, height=300, key="music")
+        #st.image(img_lottie_animation)
+        st_lottie(music, height=300, key="music")
     with text_column:
         st.write("##")
         st.subheader("Workout music")
@@ -149,8 +143,8 @@ with st.container():
 with st.container():
     image_column, text_column = st.columns((1, 2))
     with image_column:
-        st.image(img_contact_form)
-        #st_lottie(podcast, height=300, key="podcast")
+        #st.image(img_contact_form)
+        st_lottie(podcast, height=300, key="podcast")
     with text_column:
         st.write("##")
         st.subheader("Podcast")
