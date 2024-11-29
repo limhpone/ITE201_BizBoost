@@ -10,6 +10,11 @@ RUN apt-get update
 
 RUN apt-get install ffmpeg libsm6 libxext6  -y
 
+RUN apt-get update && apt-get install -y \
+    libgl1-mesa-glx \
+    libglib2.0-0 \
+    && rm -rf /var/lib/apt/lists/*
+
 RUN pip install --no-cache-dir -U install pip
 
 RUN pip install --no-cache-dir install -r requirements.txt
