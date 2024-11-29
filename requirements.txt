@@ -13,4 +13,3 @@ aiortc
 av
 pysoundfile
 tensorflow
-tflite-runtime
