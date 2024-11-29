@@ -40,12 +40,11 @@ live_process_frame = ProcessFrame()
 # Define the video_frame_callback function
 def video_frame_callback(frame: av.VideoFrame):
     try:
-        st.info("Processing a frame...")
         frame = frame.to_ndarray(format="rgb24")
         frame, _ = live_process_frame.process(frame, pose)
         return av.VideoFrame.from_ndarray(frame, format="rgb24")
-    except AttributeError as e:
-        st.error(f"Connection error: {e}")
+    except Exception as e:
+        st.error(f"An error occurred while processing the frame: {e}")
         return frame
 
 # Define WebRTC configuration
@@ -57,8 +56,9 @@ rtc_configuration = {
 }
 
 # Streamlit WebRTC streamer setup
+unique_key = f"Squats-pose-analysis-{time.time()}"  # Unique key for every instance
 ctx = webrtc_streamer(
-    key="Squats-pose-analysis",
+    key=unique_key,  # Use dynamically generated unique key
     video_frame_callback=video_frame_callback,
     rtc_configuration=rtc_configuration,
     media_stream_constraints={"video": {"width": {"ideal": 640}, "height": {"ideal": 480}}, "audio": False},
@@ -70,6 +70,7 @@ if ctx and ctx.state.playing:
     st.success("WebRTC stream is active.")
 else:
     st.warning("Waiting for WebRTC connection...")
+
 
 
 import time
