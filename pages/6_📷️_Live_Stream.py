@@ -1,5 +1,6 @@
 import av
 import os
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'  # Suppress TensorFlow warnings
 import sys
 import streamlit as st
 import cv2
@@ -8,20 +9,37 @@ import numpy as np
 from streamlit_webrtc import VideoHTMLAttributes, webrtc_streamer
 from aiortc.contrib.media import MediaRecorder
 import time
+import tensorflow as tf
+tf.get_logger().setLevel('ERROR')  # Suppress all but ERROR logs
+
+
 #from utils import find_angle, get_landmark_features, draw_text, draw_dotted_line
 
-
-
-# Add the parent directory to sys.path
-sys.path.append(os.path.abspath(os.path.join(__file__, "../../")))
-
-#from process_frame import ProcessFrame
-
-BASE_DIR = os.path.abspath(os.path.join(__file__, '../../'))
+BASE_DIR = os.path.abspath(os.getcwd())
 sys.path.append(BASE_DIR)
-#from utils import get_mediapipe_pose
-#from process_frame import ProcessFrame
-#from thresholds import get_thresholds_beginner, get_thresholds_pro
+
+def video_frame_callback(frame: av.VideoFrame):
+    try:
+        frame = frame.to_ndarray(format="rgb24")  # Decode and get RGB frame
+        frame, _ = live_process_frame.process(frame, pose)  # Process frame
+        return av.VideoFrame.from_ndarray(frame, format="rgb24")  # Encode and return RGB frame
+    except Exception as e:
+        st.error(f"An error occurred while processing the frame: {e}")
+        return frame
+
+import time
+last_processed_time = time.time()
+
+def video_frame_callback(frame: av.VideoFrame):
+    global last_processed_time
+    if time.time() - last_processed_time < 1 / 15:  # Process at ~15 FPS
+        return frame
+    last_processed_time = time.time()
+
+    frame = frame.to_ndarray(format="rgb24")  # Decode and get RGB frame
+    frame, _ = live_process_frame.process(frame, pose)  # Process frame
+    return av.VideoFrame.from_ndarray(frame, format="rgb24")  # Encode and return RGB frame
+
 
 def draw_rounded_rect(img, rect_start, rect_end, corner_width, box_color):
 
@@ -832,8 +850,5 @@ if os.path.exists(output_video_file) and st.session_state['download']:
 
 
     
-
-
-
 
 
