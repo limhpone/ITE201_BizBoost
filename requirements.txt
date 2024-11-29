@@ -12,6 +12,6 @@ streamlit-extras
 aiortc
 av
 pysoundfile
-tensorflow==2.13.0
+tensorflow
 
 
