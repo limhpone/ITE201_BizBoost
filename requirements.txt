@@ -11,8 +11,6 @@ pydataset
 streamlit-extras
 aiortc
 av
-opencv-python
 pysoundfile
-opencv-python==4.7.0.72
-opencv-python-headless==4.8.0.74
+
 
