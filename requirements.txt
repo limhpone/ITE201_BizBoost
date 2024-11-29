@@ -11,7 +11,6 @@ pydataset
 streamlit-extras
 aiortc
 av
-ProcessFrame
 opencv-python
 pysoundfile
 
