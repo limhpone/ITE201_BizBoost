@@ -3,7 +3,7 @@ opencv-python-headless
 mediapipe
 streamlit_lottie
 streamlit_webrtc
-streamlitstreamlit
+streamlit
 google-generativeai
 requests
 plotly
