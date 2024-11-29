@@ -10,7 +10,11 @@ from streamlit_webrtc import VideoHTMLAttributes, webrtc_streamer
 from aiortc.contrib.media import MediaRecorder
 import time
 import tensorflow as tf
-tf.get_logger().setLevel('ERROR')  # Suppress all but ERROR logs
+# Check for GPU
+if tf.config.list_physical_devices('GPU'):
+    print("Running on GPU")
+else:
+    print("Running on CPU")
 
 
 #from utils import find_angle, get_landmark_features, draw_text, draw_dotted_line
