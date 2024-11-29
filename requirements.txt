@@ -9,4 +9,10 @@ requests
 plotly
 pydataset
 streamlit-extras
+streamlit
+aiortc
+av
+ProcessFrame
+opencv-python
+pysoundfile
 
