@@ -1,27 +1,27 @@
 FROM python:3.9
 
-EXPOSE 8080
-
-WORKDIR /app
-
-COPY ./requirements.txt /app/requirements.txt
-
-RUN apt-get update
-
-RUN apt-get install ffmpeg libsm6 libxext6  -y
-
+# Install system dependencies
 RUN apt-get update && apt-get install -y \
-    libgl1-mesa-glx \
-    libglib2.0-0 \
+    ffmpeg \
+    libsm6 \
+    libxext6 \
     && rm -rf /var/lib/apt/lists/*
 
-RUN pip install --no-cache-dir -U install pip
+# Set the working directory
+WORKDIR /app
 
-RUN pip install --no-cache-dir install -r requirements.txt
+# Copy the requirements file
+COPY requirements.txt .
 
-COPY . /app
+# Install Python dependencies
+RUN pip install --no-cache-dir -r requirements.txt
 
-RUN /bin/sh setup.sh
+# Copy application code
+COPY . .
 
-ENTRYPOINT ["streamlit", "run", "Demo.py"]
+# Expose Streamlit port
+EXPOSE 8501
+
+# Run Streamlit
+CMD ["streamlit", "run", "Demo.py", "--server.port=8501", "--server.address=0.0.0.0"]
 
