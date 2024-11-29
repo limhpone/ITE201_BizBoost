@@ -10,6 +10,7 @@ plotly
 pydataset
 streamlit-extras
 av
+aiortc
 pysoundfile
 tensorflow
 
