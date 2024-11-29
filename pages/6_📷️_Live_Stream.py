@@ -63,7 +63,7 @@ def video_frame_callback(frame: av.VideoFrame):
         return av.VideoFrame.from_ndarray(frame, format="rgb24")  # Encode and return RGB frame
     except Exception as e:
         st.error(f"An error occurred while processing the frame: {e}")
-            return frame
+        return frame
 
 
 import time
