@@ -46,9 +46,9 @@ else:
 
 try:
     if ctx.state.playing:
-        frame = frame.to_ndarray(format="rgb24")
+        frame = frame.to_ndarray(format="rgb24")frame = frame.to_ndarray(format="rgb24")
         frame, _ = live_process_frame.process(frame, pose)
-        return av.VideoFrame.from_ndarray(frame, format="rgb24")
+    return av.VideoFrame.from_ndarray(frame, format="rgb24")
 except AttributeError as e:
     st.error(f"Connection error: {e}")
     return frame
