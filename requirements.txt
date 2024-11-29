@@ -15,4 +15,3 @@ av
 ProcessFrame
 opencv-python
 pysoundfile
-cv2
