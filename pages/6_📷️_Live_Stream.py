@@ -24,20 +24,28 @@ if tf.config.list_physical_devices('GPU'):
 else:
     print("Running on CPU")
 
-# Initialize Mediapipe Pose
+# Mediapipe Pose Initialization
 mp_pose = mp.solutions.pose
 pose = mp_pose.Pose()
 
-# Example live_process_frame initialization
+# Class to process frames
 class ProcessFrame:
-    # Define your frame processing logic here
+    def __init__(self, thresholds, flip_frame=False):
+        self.flip_frame = flip_frame
+        self.thresholds = thresholds
+        self.COLORS = {
+            'blue': (0, 127, 255),
+            'red': (255, 50, 50),
+            'green': (0, 255, 127),
+            'white': (255, 255, 255),
+        }
+        self.state_tracker = {'SQUAT_COUNT': 0, 'IMPROPER_SQUAT': 0}
+
     def process(self, frame, pose):
-        # Dummy example, replace with your actual implementation
+        # Add your frame processing logic here
         return frame, None
 
-live_process_frame = ProcessFrame()
-
-# Define the video_frame_callback function
+# Frame processing instance
 def video_frame_callback(frame: av.VideoFrame):
     try:
         frame = frame.to_ndarray(format="rgb24")
@@ -47,29 +55,48 @@ def video_frame_callback(frame: av.VideoFrame):
         st.error(f"An error occurred while processing the frame: {e}")
         return frame
 
-# Define WebRTC configuration
-rtc_configuration = {
-    "iceServers": [
-        {"urls": ["stun:stun.l.google.com:19302"]},
-        {"urls": ["turn:turnserver.example.com"], "username": "user", "credential": "pass"}
-    ]
-}
+# Threshold configurations
+def get_thresholds_beginner():
+    return {'HIP_THRESH': [10, 50], 'KNEE_THRESH': [50, 70, 95]}
 
-# Streamlit WebRTC streamer setup
-unique_key = f"Squats-pose-analysis-{time.time()}"  # Unique key for every instance
+def get_thresholds_pro():
+    return {'HIP_THRESH': [15, 50], 'KNEE_THRESH': [50, 80, 95]}
+
+# Streamlit app layout
+st.title('AI Fitness Trainer: Squats Analysis')
+mode = st.radio('Select Mode', ['Beginner', 'Pro'], horizontal=True)
+
+# Thresholds and ProcessFrame instance
+thresholds = get_thresholds_beginner() if mode == 'Beginner' else get_thresholds_pro()
+live_process_frame = ProcessFrame(thresholds=thresholds, flip_frame=True)
+
+# MediaRecorder for saving output
+output_video_file = 'output_live.flv'
+def out_recorder_factory():
+    return MediaRecorder(output_video_file)
+
+# WebRTC setup
+unique_key = f"Squats-pose-analysis-{time.time()}"
 ctx = webrtc_streamer(
-    key=unique_key,  # Use dynamically generated unique key
+    key=unique_key,
     video_frame_callback=video_frame_callback,
-    rtc_configuration=rtc_configuration,
-    media_stream_constraints={"video": {"width": {"ideal": 640}, "height": {"ideal": 480}}, "audio": False},
+    rtc_configuration={"iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}]},
+    media_stream_constraints={"video": {"width": {"min": 480, "ideal": 640}}, "audio": False},
     video_html_attrs=VideoHTMLAttributes(autoPlay=True, controls=False, muted=True),
+    out_recorder_factory=out_recorder_factory
 )
 
-# Display WebRTC connection status
+# Display stream status
 if ctx and ctx.state.playing:
     st.success("WebRTC stream is active.")
 else:
     st.warning("Waiting for WebRTC connection...")
+
+# Download button for video file
+if os.path.exists(output_video_file):
+    with open(output_video_file, 'rb') as f:
+        st.download_button('Download Video', f, file_name='output_live.flv')
+
 
 
 
