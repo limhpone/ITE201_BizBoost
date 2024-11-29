@@ -16,6 +16,14 @@ if tf.config.list_physical_devices('GPU'):
 else:
     print("Running on CPU")
 
+converter = tf.lite.TFLiteConverter.from_saved_model("path_to_model")
+converter.experimental_new_converter = True
+tflite_model = converter.convert()
+
+with open("model.tflite", "wb") as f:
+    f.write(tflite_model)
+
+
 
 #from utils import find_angle, get_landmark_features, draw_text, draw_dotted_line
 
