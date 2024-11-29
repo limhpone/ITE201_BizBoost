@@ -1,27 +1,54 @@
 import av
 import os
-os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'  # Suppress TensorFlow warnings
 import sys
+import time
+import logging
 import streamlit as st
 import cv2
 import mediapipe as mp
 import numpy as np
+import tensorflow as tf
 from streamlit_webrtc import VideoHTMLAttributes, webrtc_streamer
 from aiortc.contrib.media import MediaRecorder
-import time
-import logging
 
+# Suppress TensorFlow warnings
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
+
+# Logging configuration
 logging.basicConfig(level=logging.INFO)
 logging.getLogger("aiortc").setLevel(logging.ERROR)
 
-
-import tensorflow as tf
-# Check for GPU
+# Check for GPU availability
 if tf.config.list_physical_devices('GPU'):
     print("Running on GPU")
 else:
     print("Running on CPU")
 
+# Initialize Mediapipe Pose
+mp_pose = mp.solutions.pose
+pose = mp_pose.Pose()
+
+# Example live_process_frame initialization
+class ProcessFrame:
+    # Define your frame processing logic here
+    def process(self, frame, pose):
+        # Dummy example, replace with your actual implementation
+        return frame, None
+
+live_process_frame = ProcessFrame()
+
+# Define the video_frame_callback function
+def video_frame_callback(frame: av.VideoFrame):
+    try:
+        st.info("Processing a frame...")
+        frame = frame.to_ndarray(format="rgb24")
+        frame, _ = live_process_frame.process(frame, pose)
+        return av.VideoFrame.from_ndarray(frame, format="rgb24")
+    except AttributeError as e:
+        st.error(f"Connection error: {e}")
+        return frame
+
+# Define WebRTC configuration
 rtc_configuration = {
     "iceServers": [
         {"urls": ["stun:stun.l.google.com:19302"]},
@@ -29,7 +56,7 @@ rtc_configuration = {
     ]
 }
 
-
+# Streamlit WebRTC streamer setup
 ctx = webrtc_streamer(
     key="Squats-pose-analysis",
     video_frame_callback=video_frame_callback,
@@ -38,28 +65,12 @@ ctx = webrtc_streamer(
     video_html_attrs=VideoHTMLAttributes(autoPlay=True, controls=False, muted=True),
 )
 
+# Display WebRTC connection status
 if ctx and ctx.state.playing:
     st.success("WebRTC stream is active.")
 else:
     st.warning("Waiting for WebRTC connection...")
 
-
-try:
-    if ctx.state.playing:
-        frame = frame.to_ndarray(format="rgb24")frame = frame.to_ndarray(format="rgb24")
-        frame, _ = live_process_frame.process(frame, pose)
-    return av.VideoFrame.from_ndarray(frame, format="rgb24")
-except AttributeError as e:
-    st.error(f"Connection error: {e}")
-    return frame
-
-BASE_DIR = os.path.abspath(os.getcwd())
-sys.path.append(BASE_DIR)
-
-def video_frame_callback(frame: av.VideoFrame):
-    frame = frame.to_ndarray(format="rgb24")  # Decode and get RGB frame
-    frame, _ = live_process_frame.process(frame, pose)  # Process frame
-    return av.VideoFrame.from_ndarray(frame, format="rgb24")  # Encode and return BGR frame
 
 import time
 last_processed_time = time.time()
