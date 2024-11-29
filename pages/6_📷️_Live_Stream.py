@@ -20,7 +20,7 @@ sys.path.append(os.path.abspath(os.path.join(__file__, "../../")))
 BASE_DIR = os.path.abspath(os.path.join(__file__, '../../'))
 sys.path.append(BASE_DIR)
 #from utils import get_mediapipe_pose
-from process_frame import ProcessFrame
+#from process_frame import ProcessFrame
 #from thresholds import get_thresholds_beginner, get_thresholds_pro
 
 def draw_rounded_rect(img, rect_start, rect_end, corner_width, box_color):
