@@ -9,14 +9,10 @@ requests
 plotly
 pydataset
 streamlit-extras
-streamlit
 aiortc
 av
 opencv-python
 pysoundfile
-tensorflow
-tflite-runtime
-aioice
-
-
+opencv-python==4.7.0.72
+opencv-python-headless==4.8.0.74
 
