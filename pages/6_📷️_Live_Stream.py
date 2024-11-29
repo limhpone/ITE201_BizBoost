@@ -64,16 +64,6 @@ def video_frame_callback(frame: av.VideoFrame):
 import time
 last_processed_time = time.time()
 
-def video_frame_callback(frame: av.VideoFrame):
-    global last_processed_time
-    if time.time() - last_processed_time < 1 / 15:  # Process at ~15 FPS
-        return frame
-    last_processed_time = time.time()
-
-    frame = frame.to_ndarray(format="rgb24")  # Decode and get RGB frame
-    frame, _ = live_process_frame.process(frame, pose)  # Process frame
-    return av.VideoFrame.from_ndarray(frame, format="rgb24")  # Encode and return RGB frame
-
 def draw_rounded_rect(img, rect_start, rect_end, corner_width, box_color):
     x1, y1 = rect_start
     x2, y2 = rect_end
