@@ -9,6 +9,12 @@ import numpy as np
 from streamlit_webrtc import VideoHTMLAttributes, webrtc_streamer
 from aiortc.contrib.media import MediaRecorder
 import time
+import logging
+
+logging.basicConfig(level=logging.INFO)
+logging.getLogger("aiortc").setLevel(logging.ERROR)
+
+
 import tensorflow as tf
 # Check for GPU
 if tf.config.list_physical_devices('GPU'):
@@ -16,20 +22,53 @@ if tf.config.list_physical_devices('GPU'):
 else:
     print("Running on CPU")
 
+rtc_configuration = {
+    "iceServers": [
+        {"urls": ["stun:stun.l.google.com:19302"]},
+        {"urls": ["turn:turnserver.example.com"], "username": "user", "credential": "pass"}
+    ]
+}
 
-#from utils import find_angle, get_landmark_features, draw_text, draw_dotted_line
+
+ctx = webrtc_streamer(
+    key="Squats-pose-analysis",
+    video_frame_callback=video_frame_callback,
+    rtc_configuration=rtc_configuration,
+    media_stream_constraints={"video": {"width": {"ideal": 640}, "height": {"ideal": 480}}, "audio": False},
+    video_html_attrs=VideoHTMLAttributes(autoPlay=True, controls=False, muted=True),
+)
+
+if ctx and ctx.state.playing:
+    st.success("WebRTC stream is active.")
+else:
+    st.warning("Waiting for WebRTC connection...")
+
+
+try:
+    if ctx.state.playing:
+        frame = frame.to_ndarray(format="rgb24")
+        frame, _ = live_process_frame.process(frame, pose)
+        return av.VideoFrame.from_ndarray(frame, format="rgb24")
+except AttributeError as e:
+    st.error(f"Connection error: {e}")
+    return frame
 
 BASE_DIR = os.path.abspath(os.getcwd())
 sys.path.append(BASE_DIR)
 
 def video_frame_callback(frame: av.VideoFrame):
-    try:
-        frame = frame.to_ndarray(format="rgb24")  # Decode and get RGB frame
-        frame, _ = live_process_frame.process(frame, pose)  # Process frame
-        return av.VideoFrame.from_ndarray(frame, format="rgb24")  # Encode and return RGB frame
-    except Exception as e:
-        st.error(f"An error occurred while processing the frame: {e}")
-        return frame
+    with mp.solutions.pose.Pose(
+        static_image_mode=False, model_complexity=1, smooth_landmarks=True,
+        min_detection_confidence=0.5, min_tracking_confidence=0.5
+    ) as pose:
+        try:
+            frame = frame.to_ndarray(format="rgb24")
+            frame, _ = live_process_frame.process(frame, pose)
+            return av.VideoFrame.from_ndarray(frame, format="rgb24")
+        except Exception as e:
+            st.error(f"An error occurred while processing the frame: {e}")
+            return frame
+
 
 import time
 last_processed_time = time.time()
@@ -44,12 +83,12 @@ def video_frame_callback(frame: av.VideoFrame):
     frame, _ = live_process_frame.process(frame, pose)  # Process frame
     return av.VideoFrame.from_ndarray(frame, format="rgb24")  # Encode and return RGB frame
 
-
 def draw_rounded_rect(img, rect_start, rect_end, corner_width, box_color):
-
     x1, y1 = rect_start
     x2, y2 = rect_end
-    w = corner_width
+    w = min(corner_width, abs(x2 - x1) // 2, abs(y2 - y1) // 2)  # Validate corner width
+    # Rest of the code remains the same
+
 
     # draw filled rectangles
     cv2.rectangle(img, (x1 + w, y1), (x2 - w, y1 + w), box_color, -1)
@@ -814,12 +853,7 @@ if 'download' not in st.session_state:
 
 output_video_file = f'output_live.flv'
 
-  
 
-def video_frame_callback(frame: av.VideoFrame):
-    frame = frame.to_ndarray(format="rgb24")  # Decode and get RGB frame
-    frame, _ = live_process_frame.process(frame, pose)  # Process frame
-    return av.VideoFrame.from_ndarray(frame, format="rgb24")  # Encode and return BGR frame
 
 
 def out_recorder_factory() -> MediaRecorder:
