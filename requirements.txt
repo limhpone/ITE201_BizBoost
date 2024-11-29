@@ -12,4 +12,4 @@ streamlit-extras
 aiortc
 av
 pysoundfile
-tensorflow
+tensorflow==2.13.0; python_version < "3.12"
