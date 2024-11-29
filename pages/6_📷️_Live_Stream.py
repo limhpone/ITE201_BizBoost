@@ -60,7 +60,7 @@ def video_frame_callback(frame: av.VideoFrame):
     try:
         frame = frame.to_ndarray(format="rgb24")  # Decode and get RGB frame
         frame, _ = live_process_frame.process(frame, pose)  # Process frame
-            return av.VideoFrame.from_ndarray(frame, format="rgb24")  # Encode and return RGB frame
+        return av.VideoFrame.from_ndarray(frame, format="rgb24")  # Encode and return RGB frame
     except Exception as e:
         st.error(f"An error occurred while processing the frame: {e}")
             return frame
