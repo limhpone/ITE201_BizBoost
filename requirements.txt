@@ -9,9 +9,8 @@ requests
 plotly
 pydataset
 streamlit-extras
-streamlit
 aiortc
 av
-opencv-python
 pysoundfile
 tensorflow
+
