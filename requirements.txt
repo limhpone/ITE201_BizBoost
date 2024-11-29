@@ -3,16 +3,20 @@ opencv-python-headless
 mediapipe
 streamlit_lottie
 streamlit_webrtc
-streamlit
+streamlitstreamlit
 google-generativeai
 requests
 plotly
 pydataset
 streamlit-extras
+streamlit
 aiortc
 av
+opencv-python
 pysoundfile
-
+tensorflow
+tflite-runtime
+aioice
 
 
 
