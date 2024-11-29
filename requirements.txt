@@ -15,5 +15,3 @@ av
 opencv-python
 pysoundfile
 tensorflow
-tflite-runtime
-aioice
