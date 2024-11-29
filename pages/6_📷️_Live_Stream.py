@@ -16,6 +16,7 @@ if tf.config.list_physical_devices('GPU'):
 else:
     print("Running on CPU")
 
+
 #from utils import find_angle, get_landmark_features, draw_text, draw_dotted_line
 
 BASE_DIR = os.path.abspath(os.getcwd())
@@ -853,5 +854,8 @@ if os.path.exists(output_video_file) and st.session_state['download']:
 
 
     
+
+
+
 
 
