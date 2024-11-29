@@ -9,7 +9,11 @@ requests
 plotly
 pydataset
 streamlit-extras
+streamlit
 aiortc
 av
+opencv-python
 pysoundfile
-tensorflow==2.13.0; python_version < "3.12"
+tensorflow
+tflite-runtime
+aioice
