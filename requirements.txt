@@ -12,6 +12,7 @@ streamlit-extras
 aiortc
 av
 pysoundfile
+tensorflow
 
 
 
