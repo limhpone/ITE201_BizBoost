@@ -14,5 +14,3 @@ av
 pysoundfile
 tensorflow
 tflite-runtime
-aioice
-
