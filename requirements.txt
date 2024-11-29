@@ -1,4 +1,4 @@
-numpy
+numpynumpy
 opencv-python-headless
 mediapipe
 streamlit_lottie
@@ -9,10 +9,4 @@ requests
 plotly
 pydataset
 streamlit-extras
-streamlit
-aiortc
-av
-ProcessFrame
-opencv-python
-pysoundfile
 
